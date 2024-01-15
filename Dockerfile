@@ -12,6 +12,7 @@ RUN apt-get update &&\
  apt-get install -y ca-certificates texlive-latex-base texlive-fonts-recommended texlive-lang-cyrillic --no-install-recommends &&\
  rm -rf /var/lib/apt/lists/*
 COPY --from=build /go/bin/grafana-reporter /usr/local/bin/grafana-reporter
+RUN chmod +x /usr/local/bin/grafana-reporter
 USER nobody
 
 ENTRYPOINT [ "/usr/local/bin/grafana-reporter" ]
