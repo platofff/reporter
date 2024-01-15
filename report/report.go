@@ -133,8 +133,9 @@ func (rep *report) renderPNGsParallel(dash grafana.Dashboard) error {
 	//buffer all panels on a channel
 	panels := make(chan grafana.Panel, len(dash.Panels))
 	for _, p := range dash.Panels {
-		fmt.Println(p.Type)
-		panels <- p
+		if p.Type != 'williamvenner-timepickerbuttons-panel' {
+			panels <- p
+		}
 	}
 	close(panels)
 
