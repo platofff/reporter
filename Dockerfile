@@ -15,6 +15,8 @@ RUN apt-get update &&\
  rm -rf /var/lib/apt/lists/*
 COPY --from=build /go/bin/grafana-reporter /usr/local/bin/grafana-reporter
 RUN chmod +x /usr/local/bin/grafana-reporter
-USER nobody
+
+RUN useradd -ms /bin/bash app
+USER app
 
 ENTRYPOINT [ "/usr/local/bin/grafana-reporter" ]
