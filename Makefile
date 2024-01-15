@@ -14,7 +14,7 @@ buildall: build buildlinux
 
 .PHONY: build
 build: 
-	go install -v github.com/IzakMarais/reporter/cmd/grafana-reporter
+	go install -mod=mod -v github.com/IzakMarais/reporter/cmd/grafana-reporter
 
 .PHONY: buildlinux 
 buildlinux: 	
