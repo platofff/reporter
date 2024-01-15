@@ -1,6 +1,6 @@
 # build
 FROM golang:1.14.7-alpine3.12 AS build
-WORKDIR /go/src/${owner:-github.com/platofff}/reporter
+WORKDIR /go/src/${owner:-github.com/IzakMarais}/reporter
 RUN apk update && apk add make git
 ADD . .
 RUN make build
