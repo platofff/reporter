@@ -1,7 +1,9 @@
 # build
 FROM golang:1.21-bookworm AS build
 WORKDIR /go/src/${owner:-github.com/IzakMarais}/reporter
-RUN apk update && apk add make git
+RUN apt-get update &&\
+ apt-get install -y make git --no-install-recommends &&\
+ rm -rf /var/lib/apt/lists/*
 ADD . .
 RUN make build
 
