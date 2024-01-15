@@ -95,6 +95,7 @@ func time(r *http.Request) grafana.TimeRange {
 	params := r.URL.Query()
 	t := grafana.NewTimeRange(params.Get("from"), params.Get("to"), params.Get("timezone"))
 	log.Println("Called with time range:", t)
+	log.Println("Called with time zone:", params.Get("timezone"))
 	return t
 }
 
