@@ -1,6 +1,6 @@
 # build
 FROM golang:1.21-bookworm AS build
-WORKDIR /go/src/${owner:-github.com/IzakMarais}/reporter
+WORKDIR /go/src/${owner:-github.com/platofff}/reporter
 RUN apt-get update &&\
  apt-get install -y make git --no-install-recommends &&\
  rm -rf /var/lib/apt/lists/*
