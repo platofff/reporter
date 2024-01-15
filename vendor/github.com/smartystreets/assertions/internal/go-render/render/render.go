@@ -48,7 +48,7 @@ var typeOfFloat = reflect.TypeOf(10.1)
 // Render converts a structure to a string representation. Unline the "%#v"
 // format string, this resolves pointer types' contents in structs, maps, and
 // slices/arrays and prints their field values.
-func Render(v interface{}) string {
+func Render(v any) string {
 	buf := bytes.Buffer{}
 	s := (*traverseState)(nil)
 	s.render(&buf, 0, reflect.ValueOf(v), false)
@@ -143,20 +143,24 @@ func (s *traverseState) render(buf *bytes.Buffer, ptrs int, v reflect.Value, imp
 		if !implicit {
 			writeType(buf, ptrs, vt)
 		}
-		structAnon := vt.Name() == ""
 		buf.WriteRune('{')
-		for i := 0; i < vt.NumField(); i++ {
-			if i > 0 {
-				buf.WriteString(", ")
-			}
-			anon := structAnon && isAnon(vt.Field(i).Type)
+		if rendered, ok := renderTime(v); ok {
+			buf.WriteString(rendered)
+		} else {
+			structAnon := vt.Name() == ""
+			for i := 0; i < vt.NumField(); i++ {
+				if i > 0 {
+					buf.WriteString(", ")
+				}
+				anon := structAnon && isAnon(vt.Field(i).Type)
 
-			if !anon {
-				buf.WriteString(vt.Field(i).Name)
-				buf.WriteRune(':')
-			}
+				if !anon {
+					buf.WriteString(vt.Field(i).Name)
+					buf.WriteRune(':')
+				}
 
-			s.render(buf, 0, v.Field(i), anon)
+				s.render(buf, 0, v.Field(i), anon)
+			}
 		}
 		buf.WriteRune('}')
 
@@ -292,7 +296,7 @@ func writeType(buf *bytes.Buffer, ptrs int, t reflect.Type) {
 		if n := t.Name(); n != "" {
 			buf.WriteString(t.String())
 		} else {
-			buf.WriteString("interface{}")
+			buf.WriteString("any")
 		}
 
 	case reflect.Array:

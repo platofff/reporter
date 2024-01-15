@@ -33,7 +33,7 @@
   version = "1.1.0"
 
 [[constraint]]
-  name = "github.com/smartystreets/goconvey"
+  name = "github.com/smarty/goconvey"
   version = "1.6.3"
 
 [prune]
