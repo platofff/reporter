@@ -23,7 +23,7 @@
 [[constraint]]
   name = "github.com/IzakMarais/reporter"
   branch = "timezone_support"
-  source = "github.com/paltofff/reporter"
+  source = "github.com/platofff/reporter"
 
 [[constraint]]
   name = "github.com/gorilla/mux"
