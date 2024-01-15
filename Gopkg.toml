@@ -10,10 +10,6 @@
 #   name = "github.com/user/project"
 #   version = "1.0.0"
 #
-[[constraint]]
-  name = "github.com/IzakMarais/reporter"
-  branch = "timezone_support"
-  source = "github.com/paltofff/reporter"
 #
 # [[override]]
 #   name = "github.com/x/y"
@@ -23,6 +19,11 @@
 #   non-go = false
 #   go-tests = true
 #   unused-packages = true
+
+[[constraint]]
+  name = "github.com/IzakMarais/reporter"
+  branch = "timezone_support"
+  source = "github.com/paltofff/reporter"
 
 [[constraint]]
   name = "github.com/gorilla/mux"
