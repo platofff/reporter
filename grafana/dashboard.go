@@ -123,7 +123,7 @@ func populatePanelsFromV4JSON(dash Dashboard, dc dashContainer) Dashboard {
 
 func populatePanelsFromV5JSON(dash Dashboard, dc dashContainer) Dashboard {
 	for _, p := range dc.Dashboard.Panels {
-		if p.Type == "row" {
+		if p.Type == "row" || p.Type == "williamvenner-timepickerbuttons-panel" {
 			continue
 		}
 		p.Title = sanitizeLaTexInput(p.Title)
