@@ -96,6 +96,7 @@ type dashContainer struct {
 func NewDashboard(dashJSON []byte, variables url.Values) Dashboard {
 	var dash dashContainer
 	err := json.Unmarshal(dashJSON, &dash)
+	log.Printf("dashboard datastructure: %+v\n", dash)
 	if err != nil {
 		panic(err)
 	}
@@ -108,12 +109,15 @@ func (dc dashContainer) NewDashboard(variables url.Values) Dashboard {
 	var dash Dashboard
 	dash.Title = sanitizeLaTexInput(dc.Dashboard.Title)
 	dash.Description = sanitizeLaTexInput(dc.Dashboard.Description)
-	dash.VariableValues = sanitizeLaTexInput(getVariablesValues(variables, dash))
 	
-	for i := 0; i < len(dash.Templating.List); i++ {
-		dash.Templating.List[i].Label = sanitizeLaTexInput(dash.Templating.List[i].Label)
-		dash.Templating.List[i].Name = sanitizeLaTexInput(dash.Templating.List[i].Name)
+	for i := 0; i < len(dc.Dashboard.Templating.List); i++ {
+    dash.Templating.List = append(dash.Templating.List, TemplatingList{
+      Label: sanitizeLaTexInput(dc.Dashboard.Templating.List[i].Label),
+      Name:  sanitizeLaTexInput(dc.Dashboard.Templating.List[i].Name),
+    })
 	}
+
+	dash.VariableValues = sanitizeLaTexInput(getVariablesValues(variables, dash))
 
 	if len(dc.Dashboard.Rows) == 0 {
 		return populatePanelsFromV5JSON(dash, dc)
@@ -185,7 +189,8 @@ func findTemplatingByName(templatingList []TemplatingList, name string) *Templat
 func getVariablesValues(variables url.Values, dash Dashboard) string {
 	values := []string{}
 	for k, v := range variables {
-		var tl = findTemplatingByName(dash.Templating.List, k)
+		var tl = findTemplatingByName(dash.Templating.List, k[4:])
+		log.Printf("%+v %+v %+v\n", tl, dash.Templating.List, k[4:])
 		if tl == nil {
 			values = append(values, strings.Join(v, ", "))
 		} else {
