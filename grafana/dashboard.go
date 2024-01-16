@@ -65,6 +65,12 @@ type Row struct {
 	Panels    []Panel
 }
 
+type TemplatingList struct {
+	Label     string
+	Name      string
+}
+
+
 // Dashboard represents a Grafana dashboard
 // This is both used to unmarshal the dashbaord JSON into
 // and then enriched (sanitize fields for TeX consumption and add VarialbeValues)
@@ -72,6 +78,9 @@ type Dashboard struct {
 	Title          string
 	Description    string
 	VariableValues string //Not present in the Grafana JSON structure. Enriched data passed used by the Tex templating
+	Templating     struct {
+		List    []TemplatingList
+	}
 	Rows           []Row
 	Panels         []Panel
 }
@@ -99,7 +108,12 @@ func (dc dashContainer) NewDashboard(variables url.Values) Dashboard {
 	var dash Dashboard
 	dash.Title = sanitizeLaTexInput(dc.Dashboard.Title)
 	dash.Description = sanitizeLaTexInput(dc.Dashboard.Description)
-	dash.VariableValues = sanitizeLaTexInput(getVariablesValues(variables))
+	dash.VariableValues = sanitizeLaTexInput(getVariablesValues(variables, dash))
+	
+	for i := 0; i < len(dash.Templating.List); i++ {
+		dash.Templating.List[i].Label = sanitizeLaTexInput(dash.Templating.List[i].Label)
+		dash.Templating.List[i].Name = sanitizeLaTexInput(dash.Templating.List[i].Name)
+	}
 
 	if len(dc.Dashboard.Rows) == 0 {
 		return populatePanelsFromV5JSON(dash, dc)
@@ -159,10 +173,24 @@ func (r Row) IsVisible() bool {
 	return r.Showtitle
 }
 
-func getVariablesValues(variables url.Values) string {
+func findTemplatingByName(templatingList []TemplatingList, name string) *TemplatingList {
+	for _, item := range templatingList {
+		if item.Name == name {
+			return &item
+		}
+	}
+	return nil
+}
+
+func getVariablesValues(variables url.Values, dash Dashboard) string {
 	values := []string{}
-	for _, v := range variables {
-		values = append(values, strings.Join(v, ", "))
+	for k, v := range variables {
+		var tl = findTemplatingByName(dash.Templating.List, k)
+		if tl == nil {
+			values = append(values, strings.Join(v, ", "))
+		} else {
+			values = append(values, tl.Label + ": " + strings.Join(v, ", "))
+		}
 	}
 	return strings.Join(values, ", ")
 }
