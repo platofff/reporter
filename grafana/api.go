@@ -178,8 +178,8 @@ func (g client) getPanelURL(p Panel, dashName string, t TimeRange) string {
 	values.Add("timezone", t.Timezone)
 
 	if g.gridLayout {
-		width := int(p.GridPos.W * 100)
-		height := int(p.GridPos.H * 100)
+		width := int(p.GridPos.W * 60)
+		height := int(p.GridPos.H * 60)
 		values.Add("width", strconv.Itoa(width))
 		values.Add("height", strconv.Itoa(height))
 	} else {
