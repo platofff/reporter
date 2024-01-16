@@ -47,7 +47,7 @@ func TestV4ServeReportHandler(t *testing.T) {
 		//mock new grafana client function to capture and validate its input parameters
 		var clAPIToken string
 		var clVars url.Values
-		newGrafanaClient := func(url string, apiToken string, variables url.Values, sslCheck bool, gridLayout bool) grafana.Client {
+		newGrafanaClient := func(url string, apiToken string, cookieHeader string, variables url.Values, sslCheck bool, gridLayout bool) grafana.Client {
 			clAPIToken = apiToken
 			clVars = variables
 			return grafana.NewV4Client(url, apiToken, variables, true, false)
@@ -98,7 +98,7 @@ func TestV5ServeReportHandler(t *testing.T) {
 		//mock new grafana client function to capture and validate its input parameters
 		var clAPIToken string
 		var clVars url.Values
-		newGrafanaClient := func(url string, apiToken string, variables url.Values, sslCheck bool, gridLayout bool) grafana.Client {
+		newGrafanaClient := func(url string, apiToken string, cookieHeader string, variables url.Values, sslCheck bool, gridLayout bool) grafana.Client {
 			clAPIToken = apiToken
 			clVars = variables
 			return grafana.NewV4Client(url, apiToken, variables, true, false)
